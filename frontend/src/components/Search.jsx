@@ -1,11 +1,11 @@
 import { useState } from "react";
 
 const Search = () => {
-  const [searchInput, setSearchInput] = useState("");
+  const [searchedItem, setSearchedItem] = useState("");
   const [results, setResults] = useState([]);
 
   const handleSearch = async () => {
-    console.log(`handleSearch fired - searching ${searchInput}`);
+    console.log(`handleSearch fired - searching ${searchedItem}`);
     // const response = await fetch('FILLMEIN')
     const response = {
       batchcomplete: "",
@@ -133,7 +133,7 @@ const Search = () => {
           type="text"
           className="form-control mr-3"
           placeholder="Search Wikipedia.."
-          onChange={(e) => setSearchInput(e.target.value)}
+          onChange={(e) => setSearchedItem(e.target.value)}
         />
         <button className="btn btn-primary" onClick={handleSearch}>
           {" "}
