@@ -24,11 +24,14 @@ To configure the backend API URL and MySQL database, set up environment variable
 ### Backend `.env`
 
 ```plaintext
-PORT=5000
-DB_HOST=localhost
+
+DB_HOST=db
 DB_USER=
-DB_PASSWORD=
+DB_PASS=
 DB_NAME=
+DB_PORT=3306
+
+FRONTEND_URL=http://localhost:5173
 ```
 
 Replace `DB_USER`,`DB_PASSWORD` and `DB_NAME` with your MySQL database credentials.
@@ -69,6 +72,8 @@ npm install
    ```
 
    This will spin up the frontend, backend, and MySQL database as Docker containers.
+
+   Access the application at `http://localhost:5173/`
 
 ### Without Docker
 
