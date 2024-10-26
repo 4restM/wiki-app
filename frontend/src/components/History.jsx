@@ -1,7 +1,9 @@
 const History = () => {
   return (
-    <div>
-      <p>FILL ME IN</p>
+    <div className="container mt-3">
+      <div className="card">
+        <p>History will be displayed here</p>
+      </div>
     </div>
   );
 };
