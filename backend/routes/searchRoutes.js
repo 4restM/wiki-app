@@ -6,8 +6,16 @@ const router = express.Router();
 router.get("/search", async (req, res) => {
   const { query } = req.query;
   try {
-    console.log("get /search touched");
+    const response = await axios.get("https://en.wikipedia.org/w/api.php", {
+      params: {
+        action: "query",
+        list: "search",
+        srsearch: query,
+        format: "json",
+      },
+    });
+    res.json(response.data.query.search);
   } catch (error) {
-    console.error("Error,", error);
+    res.status(500).send("Error retreiving data from wikipedia");
   }
 });

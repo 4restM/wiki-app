@@ -9,7 +9,6 @@ router.get("/history", async (req, res) => {
     //todo after sequelize / mysql init
     console.log("get /history touched");
   } catch (error) {
-    console.error("Error,", error);
     res.status(500).json({ error: `${error}` });
   }
 });
@@ -20,7 +19,6 @@ router.post("/history", async (req, res) => {
     //todo after sequelize / mysql init
     console.log("post /history touched");
   } catch (error) {
-    console.error("Error,", error);
     res.status(500).json({ error: `${error}` });
   }
 });
