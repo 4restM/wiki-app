@@ -1,28 +1,27 @@
 const express = require("express");
-const axios = require("axios");
-
 const router = express.Router();
+const { History } = require("../models"); // Import History model from models/index.js
 
+// Endpoint to retrieve history
 router.get("/history", async (req, res) => {
   try {
-    const history = await History.findAll({
-      order: [["timestamp", "DESC"]],
-    });
+    const history = await History.findAll({ order: [["createdAt", "DESC"]] });
     res.json(history);
   } catch (error) {
-    console.error("Failing to retreive history", error);
-    res.status(500).json({ error: "Failed to retreive history" });
+    console.error("Failing to retrieve history", error);
+    res.status(500).json({ error: "Failed to retrieve history" });
   }
 });
 
+// Endpoint to add a new search to history
 router.post("/history", async (req, res) => {
-  const { searchedItem } = req.body;
+  const { item } = req.body;
   try {
-    const createHistory = await History.create({ searchedItem });
-    res.status(201).json(createHistory);
+    const newEntry = await History.create({ item });
+    res.status(201).json(newEntry);
   } catch (error) {
-    console.error("Failed to save history:", error);
-    res.status(500).json({ error: "Failed to save history" });
+    console.error("Failing to add history entry", error);
+    res.status(500).json({ error: "Failed to add history entry" });
   }
 });
 

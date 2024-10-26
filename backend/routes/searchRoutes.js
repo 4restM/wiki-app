@@ -16,6 +16,7 @@ router.get("/search", async (req, res) => {
         format: "json",
       },
     });
+    res.json(response.data.query.search);
   } catch (error) {
     console.error("Error retrieving data from Wikipedia:", error.message);
     res.status(500).send("Error retrieving data from Wikipedia");

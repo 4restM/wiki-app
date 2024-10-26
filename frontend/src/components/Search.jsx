@@ -1,28 +1,53 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DOMPurify from "dompurify";
 
 function Search() {
   const [searchedItem, setSearchedItem] = useState("");
   const [results, setResults] = useState([]);
+  const [history, setHistory] = useState([]); // History state
   const [loading, setLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
+  // Fetch initial history on mount
+  useEffect(() => {
+    fetchHistory();
+  }, []);
+
+  const fetchHistory = async () => {
+    try {
+      const response = await fetch(`${apiBaseUrl}/api/history`);
+      if (response.ok) {
+        const data = await response.json();
+        setHistory(data);
+      }
+    } catch (error) {
+      console.error("Error fetching history", error);
+    }
+  };
+
+  const handleSearch = async (e, item = searchedItem) => {
+    if (e) e.preventDefault();
+    if (!item) return;
+
     setLoading(true);
     setHasSearched(true);
     try {
-      const response = await fetch(
-        `${apiBaseUrl}/api/search?query=${searchedItem}`
-      );
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
+      const response = await fetch(`${apiBaseUrl}/api/search?query=${item}`);
+      if (!response.ok) throw new Error("Network response was not ok");
 
       const data = await response.json();
       setResults(data);
+
+      // Adding the searched item to history
+      await fetch(`${apiBaseUrl}/api/history`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ item }),
+      });
+
+      // Fetch updated history
+      fetchHistory();
     } catch (error) {
       console.error("Error fetching data", error);
     } finally {
@@ -35,10 +60,15 @@ function Search() {
     return cleanSnippet + "..";
   };
 
+  const handleHistoryClick = (item) => {
+    setSearchedItem(item); // Update the search input
+    handleSearch(null, item); // Call handleSearch with the selected item
+  };
+
   return (
     <div className="container">
       <h1>Wiki Search</h1>
-      <form onSubmit={handleSearch}>
+      <form onSubmit={(e) => handleSearch(e)}>
         <div className="mb-3">
           <input
             type="text"
@@ -84,6 +114,26 @@ function Search() {
           </ul>
         ) : (
           !loading && hasSearched && <p>No results found</p>
+        )}
+      </div>
+
+      <div className="mt-5">
+        <h3>Search History</h3>
+        {history.length > 0 ? (
+          <ul className="list-group">
+            {history.map((item) => (
+              <li
+                key={item.id}
+                className="list-group-item list-group-item-action"
+                onClick={() => handleHistoryClick(item.item)} // Pass 'item' to handleHistoryClick
+                style={{ cursor: "pointer" }}
+              >
+                {item.item}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No history available.</p>
         )}
       </div>
     </div>
