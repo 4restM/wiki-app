@@ -61,8 +61,8 @@ function Search() {
   };
 
   const handleHistoryClick = (item) => {
-    setSearchedItem(item); // Update the search input
-    handleSearch(null, item); // Call handleSearch with the selected item
+    setSearchedItem(item);
+    handleSearch(null, item);
   };
 
   return (
