@@ -4,22 +4,25 @@ const axios = require("axios");
 const router = express.Router();
 
 router.get("/history", async (req, res) => {
-  const { query } = req.query;
   try {
-    //todo after sequelize / mysql init
-    console.log("get /history touched");
+    const history = await History.findAll({
+      order: [["timestamp", "DESC"]],
+    });
+    res.json(history);
   } catch (error) {
-    res.status(500).json({ error: `${error}` });
+    console.error("Failing to retreive history", error);
+    res.status(500).json({ error: "Failed to retreive history" });
   }
 });
 
 router.post("/history", async (req, res) => {
-  const { searchInput } = req.body;
+  const { searchedItem } = req.body;
   try {
-    //todo after sequelize / mysql init
-    console.log("post /history touched");
+    const createHistory = await History.create({ searchedItem });
+    res.status(201).json(createHistory);
   } catch (error) {
-    res.status(500).json({ error: `${error}` });
+    console.error("Failed to save history:", error);
+    res.status(500).json({ error: "Failed to save history" });
   }
 });
 
