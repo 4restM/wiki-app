@@ -5,6 +5,8 @@ const router = express.Router();
 
 router.get("/search", async (req, res) => {
   const { query } = req.query;
+  console.log(`Searching for ${query}`);
+
   try {
     const response = await axios.get("https://en.wikipedia.org/w/api.php", {
       params: {
@@ -14,8 +16,10 @@ router.get("/search", async (req, res) => {
         format: "json",
       },
     });
-    res.json(response.data.query.search);
   } catch (error) {
-    res.status(500).send("Error retreiving data from wikipedia");
+    console.error("Error retrieving data from Wikipedia:", error.message);
+    res.status(500).send("Error retrieving data from Wikipedia");
   }
 });
+
+module.exports = router;
