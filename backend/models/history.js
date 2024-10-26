@@ -1,23 +1,22 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class History extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
+const { Model, DataTypes } = require("sequelize");
+
+module.exports = (sequelize) => {
+  class History extends Model {}
+
+  History.init(
+    {
+      item: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+    },
+    {
+      sequelize, // Pass the Sequelize instance
+      modelName: "History", // Name of the model
+      tableName: "histories", // Optional: specify a custom table name
+      timestamps: true, // Enable createdAt and updatedAt timestamps
     }
-  }
-  History.init({
-    searchedItem: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'History',
-  });
+  );
+
   return History;
 };
